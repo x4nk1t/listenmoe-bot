@@ -1,0 +1,15 @@
+{
+  "name": "listenmoe-bot",
+  "version": "1.0.0",
+  "description": "A discord bot to stream the listen.moe radio.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "x4nk1t",
+  "dependencies": {
+    "eris": "^0.16.1"
+  }
+}
