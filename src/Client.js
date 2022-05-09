@@ -39,10 +39,14 @@ class Client extends DiscordClient{
         })
 
         this.on('voiceChannelLeave', (member, oldChannel) => {
+            if(member.id == this.user.id) return;
+
             this.setLeaveTimeout(oldChannel);
         })
 
         this.on('voiceChannelSwitch', (member, newChannel, oldChannel) => {
+            if(member.id == this.user.id) return;
+
             const guild = oldChannel.guild;
             const botMember = guild.members.get(this.user.id);
             const botVoiceChannelId = botMember.voiceState.channelID;
@@ -57,9 +61,9 @@ class Client extends DiscordClient{
     }
 
     setLeaveTimeout(voiceChannel){
-        if(!voiceChannel.voiceMembers.size - 1){
+        if(voiceChannel.voiceMembers.size == 1){
             setTimeout(() => {
-                if(!voiceChannel.voiceMembers.size - 1) {
+                if(voiceChannel.voiceMembers.size == 1) {
                     voiceChannel.leave();
                     const messageChannel = this.channelMaps.get(voiceChannel.id);
                     if(messageChannel) messageChannel.createMessage(this.embed(`Nobody listening! Left **${voiceChannel.name}**!`)).catch(console.error);
