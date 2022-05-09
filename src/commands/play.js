@@ -8,6 +8,8 @@ class Play extends BaseCommand{
             aliases: ['join'],
             usage: '[jpop|kpop]'
         });
+
+        this.inlineVolume = this.client.config.volumeControl ? {inlineVolume: true} : {};
     }
 
     execute(message, args){
@@ -29,7 +31,7 @@ class Play extends BaseCommand{
                     const kpop = args[0] == null ? false : args[0].toLowerCase() == 'kpop';
                     const stream = kpop ? 'https://listen.moe/kpop/stream' : 'https://listen.moe/stream';
 
-                    connection.play(stream);
+                    connection.play(stream, this.inlineVolume);
 
                     this.client.channelMaps.set(voiceChannel.id, message.channel);
                     message.channel.createMessage(this.embed('Playing '+ (kpop ? '**KPOP**' : '**JPOP**') + ' in **'+ voiceChannel.name + '**'));

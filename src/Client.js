@@ -6,6 +6,7 @@ const Status = require("./commands/status.js");
 const Play =  require("./commands/play.js");
 const Leave =  require("./commands/leave.js");
 const NowPlaying = require("./commands/now-playing.js");
+const Volume = require("./commands/Volume.js");
 
 const config = require('../config');
 
@@ -16,6 +17,7 @@ class Client extends DiscordClient{
         this.channelMaps = new Collection();
         this.prefix = config.prefix;
         this.embedColor = parseInt(config.embedColor.replace('#', ''), 16);
+        this.config = config;
 
         this.wsJPOP = new WSConnect(this, 'gateway_v2');
         this.wsKPOP = new WSConnect(this, 'kpop/gateway_v2');
@@ -77,6 +79,7 @@ class Client extends DiscordClient{
         this.registerCommand(new Play(this));
         this.registerCommand(new NowPlaying(this));
         this.registerCommand(new Status(this));
+        this.registerCommand(new Volume(this));
     }
 
     registerCommand(commandClass){

@@ -1,5 +1,6 @@
 {
     "prefix": "~",
     "botToken": "your-bot-token-here",
-    "embedColor": "#fe015a"
+    "embedColor": "#fe015a",
+    "volumeControl": false
 }
