@@ -9,11 +9,14 @@ const NowPlaying = require("./commands/now-playing.js");
 const Volume = require("./commands/Volume.js");
 
 const config = require('../config');
+const ConfigChecker = require("./utils/ConfigChecker.js");
 
 class Client extends DiscordClient{
     constructor(token, options = {}){
         super(token, options);
-        
+
+        ConfigChecker();
+
         this.channelMaps = new Collection();
         this.prefix = config.prefix;
         this.embedColor = parseInt(config.embedColor.replace('#', ''), 16);
