@@ -6,7 +6,7 @@ const Status = require("./commands/status.js");
 const Play =  require("./commands/play.js");
 const Leave =  require("./commands/leave.js");
 const NowPlaying = require("./commands/now-playing.js");
-const Volume = require("./commands/Volume.js");
+const Volume = require("./commands/volume.js");
 
 const config = require('../config');
 const ConfigChecker = require("./utils/ConfigChecker.js");
