@@ -21,9 +21,11 @@ npm install
 **4. Edit the config file**
 ```
 {
+    "configVersion": "0.0.1",
     "prefix": "~",
     "botToken": "your-bot-token-here",
-    "embedColor": "#fe015a"
+    "embedColor": "#fe015a",
+    "volumeControl": false
 }
 ```
 
@@ -35,10 +37,15 @@ To start the bot run `npm start` or `node app.js`
 `Prefix can be changed in the config file.`
 
 Default prefix is `~`
-- `~play [kpop]` - Start streaming radio to voice channel.
 - `~leave` - Bot leaves the voice channel if connected to any.
 - `~now-playing [kpop]` - Shows what is currently playing
+- `~play [kpop]` - Start streaming radio to voice channel.
 - `~status` - Shows the bot status
+- `~volume` - Changes the volume of the music
+
+_Notes:_
+- _Volume control should be set to **true** in config file for volume command to work_
+- _**Volume is not saved** so you have to manually change everytime the bot leaves channel_
 
 ## Contributing
 Any contribution is appreciated. Please fork the repo and create a pull request.
@@ -48,4 +55,4 @@ Distributed under the GNU License. See `LICENSE` for more information.
 
 
 
-_Note: This bot is not affiliated with [listen.moe](https://listen.moe)._
+_This bot is not affiliated with [listen.moe](https://listen.moe)._
