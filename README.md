@@ -4,6 +4,7 @@ A discord bot to stream the [listen.moe](https://listen.moe) radio.
 
 ## Prerequisites
 - Node v16+ - [nodejs.org](https://nodejs.org)
+- FFMpeg - [ffmpeg.org](https://ffmpeg.org/download.html)
 
 ## Setup
 
