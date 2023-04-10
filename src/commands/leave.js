@@ -1,25 +1,25 @@
-const { VoiceChannel } = require("eris");
+const {VoiceChannel} = require("eris");
 const BaseCommand = require("../BaseCommand.js");
 
-class Leave extends BaseCommand{
-    constructor(client){
+class Leave extends BaseCommand {
+    constructor(client) {
         super(client, {
             name: 'leave',
             aliases: ['stop']
         });
     }
 
-    execute(message, args){
+    execute(message, args) {
         const guild = message.member.guild;
         const channelId = message.member.voiceState.channelID;
-        if(channelId){
+        if (channelId) {
             const voiceChannel = guild.channels.get(channelId);
             const botMember = guild.members.get(this.client.user.id);
 
-            if(botMember.voiceState.channelID){
-                if(voiceChannel instanceof VoiceChannel){
+            if (botMember.voiceState.channelID) {
+                if (voiceChannel instanceof VoiceChannel) {
                     voiceChannel.leave();
-                    message.channel.createMessage(this.embed(`Sucessfully left **${voiceChannel.name}**!`));
+                    message.channel.createMessage(this.embed(`Successfully left **${voiceChannel.name}**!`));
                 }
             } else {
                 message.channel.createMessage(this.embed('I\'m not connected to any channels.'));

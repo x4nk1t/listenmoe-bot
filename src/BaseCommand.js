@@ -1,7 +1,7 @@
 class BaseCommand {
-    constructor(client, options){
+    constructor(client, options) {
         this.client = client;
-        
+
         this.name = options.name || '';
         this.aliases = options.aliases || [];
         this.usage = options.usage || '';
@@ -10,21 +10,21 @@ class BaseCommand {
         this.embedColor = this.client.embedColor;
     }
 
-    sendUsage(message){
+    sendUsage(message) {
         message.channel.createMessage(this.embed(`**Usage:** ${this.prefix}${this.name} ${this.usage}`));
     }
 
-    embed(message){
+    embed(message) {
         return this.client.embed(message);
     }
 
-    isConnected(message){
+    isConnected(message) {
         const guild = message.member.guild;
         const channelId = message.member.voiceState.channelID;
-        if(channelId){
+        if (channelId) {
             const botMember = guild.members.get(this.client.user.id);
 
-            if(botMember.voiceState.channelID){
+            if (botMember.voiceState.channelID) {
                 return true;
             } else {
                 message.channel.createMessage(this.embed('I\'m not connected to any channels.'));

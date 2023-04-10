@@ -1,18 +1,18 @@
-const { Client: DiscordClient, Collection } = require("eris");
+const {Client: DiscordClient, Collection} = require("eris");
 const WSConnect = require('./api/wsconnect.js');
 const BaseCommand = require("./BaseCommand.js");
 
 const Status = require("./commands/status.js");
-const Play =  require("./commands/play.js");
-const Leave =  require("./commands/leave.js");
+const Play = require("./commands/play.js");
+const Leave = require("./commands/leave.js");
 const NowPlaying = require("./commands/now-playing.js");
 const Volume = require("./commands/volume.js");
 
 const config = require('../config');
 const ConfigChecker = require("./utils/ConfigChecker.js");
 
-class Client extends DiscordClient{
-    constructor(token, options = {}){
+class Client extends DiscordClient {
+    constructor(token, options = {}) {
         super(token, options);
 
         ConfigChecker();
@@ -32,52 +32,52 @@ class Client extends DiscordClient{
         this.registerEvents();
     }
 
-    registerEvents(){
+    registerEvents() {
         this.on('ready', () => {
-            console.log('Logged in as '+ this.user.username);
+            console.log('Logged in as ' + this.user.username);
         })
 
         this.on('messageCreate', message => {
-            if(message.author.bot) return;
-            
+            if (message.author.bot) return;
+
             this.executeCommand(message);
         })
 
         this.on('voiceChannelLeave', (member, oldChannel) => {
-            if(member.id == this.user.id) return;
+            if (member.id === this.user.id) return;
 
             this.setLeaveTimeout(oldChannel);
         })
 
         this.on('voiceChannelSwitch', (member, newChannel, oldChannel) => {
-            if(member.id == this.user.id) return;
+            if (member.id === this.user.id) return;
 
             const guild = oldChannel.guild;
             const botMember = guild.members.get(this.user.id);
             const botVoiceChannelId = botMember.voiceState.channelID;
 
-            if(!botVoiceChannelId) return;
+            if (!botVoiceChannelId) return;
 
-            if(newChannel.id != botVoiceChannelId){
+            if (newChannel.id !== botVoiceChannelId) {
                 const botVoiceChannel = guild.channels.get(botVoiceChannelId);
                 this.setLeaveTimeout(botVoiceChannel);
             }
         })
     }
 
-    setLeaveTimeout(voiceChannel){
-        if(voiceChannel.voiceMembers.size == 1){
+    setLeaveTimeout(voiceChannel) {
+        if (voiceChannel.voiceMembers.size === 1) {
             setTimeout(() => {
-                if(voiceChannel.voiceMembers.size == 1) {
+                if (voiceChannel.voiceMembers.size === 1) {
                     voiceChannel.leave();
                     const messageChannel = this.channelMaps.get(voiceChannel.id);
-                    if(messageChannel) messageChannel.createMessage(this.embed(`Nobody listening! Left **${voiceChannel.name}**!`)).catch(console.error);
+                    if (messageChannel) messageChannel.createMessage(this.embed(`Nobody listening! Left **${voiceChannel.name}**!`)).catch(console.error);
                 }
             }, 60000) //1 minutes
         }
     }
 
-    loadCommands(){
+    loadCommands() {
         this.registerCommand(new Leave(this));
         this.registerCommand(new Play(this));
         this.registerCommand(new NowPlaying(this));
@@ -85,15 +85,15 @@ class Client extends DiscordClient{
         this.registerCommand(new Volume(this));
     }
 
-    registerCommand(commandClass){
-        if(commandClass instanceof BaseCommand){
+    registerCommand(commandClass) {
+        if (commandClass instanceof BaseCommand) {
             const name = commandClass.name;
 
-            if(this.commands.get(name)){
+            if (this.commands.get(name)) {
                 console.error(`Couldn't load ${name}. Reason: Already loaded`);
                 return;
             }
-            
+
             commandClass.aliases.forEach(alias => {
                 this.aliases.set(alias, commandClass);
             })
@@ -104,9 +104,9 @@ class Client extends DiscordClient{
         }
     }
 
-    executeCommand(message){
-        const command = this.getCommand(message);
-        if(command){
+    executeCommand(message) {
+        const command = this.getBotCommand(message);
+        if (command) {
             const args = message.content.replace(this.prefix, '').split(' ');
             args.shift();
 
@@ -114,16 +114,14 @@ class Client extends DiscordClient{
         }
     }
 
-    getCommand(message){
+    getBotCommand(message) {
         const args = message.content.split(' ');
         const commandName = args[0].toLowerCase().replace(this.prefix, '');
 
-        const commandClass = this.commands.get(commandName) || this.aliases.get(commandName);
-
-        return commandClass;        
+        return this.commands.get(commandName) || this.aliases.get(commandName);
     }
 
-    embed(description){
+    embed(description) {
         return {embed: {color: this.embedColor, description: description}};
     }
 }
