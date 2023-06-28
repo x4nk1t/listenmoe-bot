@@ -24,6 +24,7 @@ class Volume extends BaseCommand {
 
                 if (voiceConnection) {
                     voiceConnection.setVolume((volume / 100));
+                    this.client.setGuildVolume(guild.id, volume);
 
                     message.channel.createMessage(this.embed(`Set volume to \`${volume}\`!`));
                 } else {

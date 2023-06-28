@@ -1,4 +1,6 @@
 const {Client: DiscordClient, Collection} = require("eris");
+const fs = require("fs");
+
 const WSConnect = require('./api/wsconnect.js');
 const BaseCommand = require("./BaseCommand.js");
 
@@ -9,6 +11,7 @@ const NowPlaying = require("./commands/now-playing.js");
 const Volume = require("./commands/volume.js");
 
 const config = require('../config');
+const guild_volumes = require('../guild_volumes');
 const ConfigChecker = require("./utils/ConfigChecker.js");
 
 class Client extends DiscordClient {
@@ -112,6 +115,34 @@ class Client extends DiscordClient {
 
             command.execute(message, args);
         }
+    }
+
+    getGuildVolume(guildId) {
+        var volume = 100;
+        guild_volumes.forEach(data => {
+            console.log(data, guildId)
+            if(data.guild_id == guildId){
+                volume = data.volume;
+            }
+        })
+        
+        return volume;
+    }
+
+    setGuildVolume(guildId, volume){
+        var found = false;
+        guild_volumes.forEach(data => {
+            if(data.guild_id == guildId){
+                found = true;
+                data.volume = volume;
+            }
+        });
+
+        if(!found){
+            guild_volumes.push({guild_id: guildId, volume: volume});
+        }
+
+        fs.writeFileSync("guild_volumes.json", JSON.stringify(guild_volumes));
     }
 
     getBotCommand(message) {

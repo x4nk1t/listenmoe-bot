@@ -33,6 +33,11 @@ class Play extends BaseCommand {
 
                     connection.play(stream, this.inlineVolume);
 
+                    if (this.client.config.volumeControl) {
+                        const volume = this.client.getGuildVolume(connection.id);
+                        connection.setVolume((volume / 100));
+                    }
+
                     this.client.channelMaps.set(voiceChannel.id, message.channel);
                     message.channel.createMessage(this.embed('Playing ' + (kpop ? '**KPOP**' : '**JPOP**') + ' in **' + voiceChannel.name + '**'));
                 }).catch(err => {
