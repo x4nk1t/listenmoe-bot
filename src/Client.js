@@ -38,19 +38,19 @@ class Client extends DiscordClient {
     registerEvents() {
         this.on('ready', () => {
             console.log('Logged in as ' + this.user.username);
-        })
+        });
 
         this.on('messageCreate', message => {
             if (message.author.bot) return;
 
             this.executeCommand(message);
-        })
+        });
 
         this.on('voiceChannelLeave', (member, oldChannel) => {
             if (member.id === this.user.id) return;
 
             this.setLeaveTimeout(oldChannel);
-        })
+        });
 
         this.on('voiceChannelSwitch', (member, newChannel, oldChannel) => {
             if (member.id === this.user.id) return;
@@ -65,7 +65,15 @@ class Client extends DiscordClient {
                 const botVoiceChannel = guild.channels.get(botVoiceChannelId);
                 this.setLeaveTimeout(botVoiceChannel);
             }
-        })
+        });
+
+        process.on('SIGINT', () => {
+            this.voiceConnections.forEach((connection) => {
+                this.closeVoiceConnection(connection.id);
+            });
+            this.disconnect();
+            process.exit();
+        });
     }
 
     setLeaveTimeout(voiceChannel) {
@@ -76,7 +84,7 @@ class Client extends DiscordClient {
                     const messageChannel = this.channelMaps.get(voiceChannel.id);
                     if (messageChannel) messageChannel.createMessage(this.embed(`Nobody listening! Left **${voiceChannel.name}**!`)).catch(console.error);
                 }
-            }, 60000) //1 minutes
+            }, 60000); //1 minutes
         }
     }
 
@@ -99,7 +107,7 @@ class Client extends DiscordClient {
 
             commandClass.aliases.forEach(alias => {
                 this.aliases.set(alias, commandClass);
-            })
+            });
 
             this.commands.set(name, commandClass);
         } else {
@@ -120,11 +128,10 @@ class Client extends DiscordClient {
     getGuildVolume(guildId) {
         var volume = 100;
         guild_volumes.forEach(data => {
-            console.log(data, guildId)
             if(data.guild_id == guildId){
                 volume = data.volume;
             }
-        })
+        });
         
         return volume;
     }
