@@ -3,14 +3,14 @@ const BaseCommand = require("../BaseCommand.js");
 class Status extends BaseCommand {
     constructor(client) {
         super(client, {
-            name: 'status',
-            aliases: ['stats']
+            name: "status",
+            description: "Shows the status of the bot"
         });
     }
 
-    async execute(message, args) {
-        const sent = await message.channel.createMessage('Pong!');
-        const ping = Math.round(sent.timestamp - message.timestamp);
+    async execute(interaction, args) {
+        const sent = await interaction.createMessage('Pong!');
+        const ping = Math.round(sent.timestamp - interaction.timestamp);
 
         const embed = {
             color: this.client.embedColor,

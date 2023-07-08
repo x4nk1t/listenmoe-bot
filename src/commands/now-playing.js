@@ -3,12 +3,20 @@ const BaseCommand = require("../BaseCommand.js");
 class NowPlaying extends BaseCommand {
     constructor(client) {
         super(client, {
-            name: 'now-playing',
-            aliases: ['np']
+            name: "now-playing",
+            description: "Shows what is currently playing",
+            choices: [{
+                name: "jpop",
+                value: "jpop"
+            },
+            {
+                name: "kpop",
+                value: "kpop"
+            }]
         });
     }
 
-    execute(message, args) {
+    execute(interaction, args) {
         var cp = this.client.wsJPOP.currentPlaying.song;
         var pop = '(JPOP)';
 
@@ -29,12 +37,12 @@ class NowPlaying extends BaseCommand {
                 {name: 'Duration', value: this.formatTime(cp.duration)},
             ],
             footer: {
-                text: 'Requested by ' + message.author.username,
-                icon_url: message.author.avatarURL
+                text: 'Requested by ' + interaction.member.username,
+                icon_url: interaction.member.user.avatarURL
             }
         }
 
-        message.channel.createMessage({embed: embed})
+        interaction.createMessage({embed: embed})
     }
 
     formatTime(duration) {
