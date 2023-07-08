@@ -46,7 +46,6 @@ Default prefix is `~`
 
 _Notes:_
 - _Volume control should be set to **true** in config file for volume command to work_
-- _**Volume is not saved** so you have to manually change everytime the bot leaves channel_
 
 ## Contributing
 Any contribution is appreciated. Please fork the repo and create a pull request.
