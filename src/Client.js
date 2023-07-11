@@ -22,7 +22,6 @@ class Client extends DiscordClient {
         ConfigChecker();
 
         this.channelMaps = new Collection();
-        this.prefix = config.prefix;
         this.embedColor = parseInt(config.embedColor.replace('#', ''), 16);
         this.config = config;
 

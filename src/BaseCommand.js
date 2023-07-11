@@ -6,12 +6,7 @@ class BaseCommand {
         this.description = options.description || 'N/A';
         this.options = options.options || [];
 
-        this.prefix = this.client.prefix;
         this.embedColor = this.client.embedColor;
-    }
-
-    sendUsage(interaction) {
-        interaction.createMessage(this.embed(`**Usage:** ${this.prefix}${this.name} ${this.usage}`));
     }
 
     embed(interaction) {
