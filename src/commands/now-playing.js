@@ -1,26 +1,36 @@
 const BaseCommand = require("../BaseCommand.js");
+const { Constants } = require("eris");
 
 class NowPlaying extends BaseCommand {
     constructor(client) {
         super(client, {
             name: "now-playing",
             description: "Shows what is currently playing",
-            choices: [{
-                name: "jpop",
-                value: "jpop"
-            },
-            {
-                name: "kpop",
-                value: "kpop"
+            options: [{
+                name: "type",
+                description: "Choose which now playing to show",
+                type: Constants.ApplicationCommandOptionTypes.STRING,
+                required: true,
+                choices: [
+                    {
+                        name: "JPOP",
+                        value: "jpop"
+                    },
+                    {
+                        name: "KPOP",
+                        value: "kpop"
+                    }
+                ]
             }]
         });
     }
 
     execute(interaction, args) {
         var cp = this.client.wsJPOP.currentPlaying.song;
+        const type = args[0].value || "";
         var pop = '(JPOP)';
 
-        if (args[0] && args[0].toLowerCase() == 'kpop') {
+        if (type && type.toLowerCase() == 'kpop') {
             pop = '(KPOP)';
             cp = this.client.wsKPOP.currentPlaying.song;
         }

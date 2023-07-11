@@ -4,7 +4,7 @@ class BaseCommand {
 
         this.name = options.name || '';
         this.description = options.description || 'N/A';
-        this.choices = options.choices || [];
+        this.options = options.options || [];
 
         this.prefix = this.client.prefix;
         this.embedColor = this.client.embedColor;

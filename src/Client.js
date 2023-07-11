@@ -14,7 +14,6 @@ const config = require('../config');
 const guild_volumes = require('../guild_volumes');
 const ConfigChecker = require("./utils/ConfigChecker.js");
 const Eris = require("eris");
-const internal = require("stream");
 
 class Client extends DiscordClient {
     constructor(token, options = {}) {
@@ -109,7 +108,7 @@ class Client extends DiscordClient {
         if (commandClass instanceof BaseCommand) {
             const name = commandClass.name;
             const description = commandClass.description;
-            const choices = commandClass.choices;
+            const options = commandClass.options;
 
             if (this.commands.get(name)) {
                 console.error(`Couldn't load ${name}. Reason: Already loaded`);
@@ -121,8 +120,8 @@ class Client extends DiscordClient {
             this.createCommand({
                 name: name,
                 description: description,
-                choices: choices
-            })
+                options: options
+            });
         } else {
             console.error(`Couldn't load ${commandClass}. Reason: Not a command.`);
         }
@@ -131,11 +130,12 @@ class Client extends DiscordClient {
     executeCommand(interaction) {
         if (interaction instanceof Eris.CommandInteraction) {
             const commandName = interaction.data.name;
+            const args = interaction.data.options || [];
 
             const command = this.getBotCommand(commandName);
 
             if (command instanceof BaseCommand)
-                command.execute(interaction, []);
+                command.execute(interaction, args);
         }
     }
 
