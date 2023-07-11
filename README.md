@@ -22,8 +22,7 @@ npm install
 **4. Edit the config file**
 ```
 {
-    "configVersion": "0.0.1",
-    "prefix": "~",
+    "configVersion": "0.0.2",
     "botToken": "your-bot-token-here",
     "embedColor": "#fe015a",
     "volumeControl": false
@@ -34,15 +33,15 @@ npm install
 
 To start the bot run `npm start` or `node app.js`
 
-## Commands
-`Prefix can be changed in the config file.`
+## Commands (Slash Commands)
 
-Default prefix is `~`
-- `~leave` - Bot leaves the voice channel if connected to any.
-- `~now-playing [kpop]` - Shows what is currently playing
-- `~play [kpop]` - Start streaming radio to voice channel.
-- `~status` - Shows the bot status
-- `~volume` - Changes the volume of the music
+_If you want to use prefix commands then see [prefix commands branch](https://github.com/x4nk1t/listenmoe-bot/tree/prefix_commands)_
+
+- `leave` - Bot leaves the voice channel if connected to any.
+- `now-playing [jpop|kpop]` - Shows what is currently playing
+- `play [jpop|kpop]` - Start streaming radio to voice channel.
+- `status` - Shows the bot status
+- `volume` - Changes the volume of the music
 
 _Notes:_
 - _Volume control should be set to **true** in config file for volume command to work_

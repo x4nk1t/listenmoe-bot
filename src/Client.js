@@ -1,4 +1,4 @@
-const {Client: DiscordClient, Collection} = require("eris");
+const { Client: DiscordClient, Collection } = require("eris");
 const fs = require("fs");
 
 const WSConnect = require('./api/wsconnect.js');
@@ -13,6 +13,7 @@ const Volume = require("./commands/volume.js");
 const config = require('../config');
 const guild_volumes = require('../guild_volumes');
 const ConfigChecker = require("./utils/ConfigChecker.js");
+const Eris = require("eris");
 
 class Client extends DiscordClient {
     constructor(token, options = {}) {
@@ -21,7 +22,6 @@ class Client extends DiscordClient {
         ConfigChecker();
 
         this.channelMaps = new Collection();
-        this.prefix = config.prefix;
         this.embedColor = parseInt(config.embedColor.replace('#', ''), 16);
         this.config = config;
 
@@ -31,19 +31,20 @@ class Client extends DiscordClient {
         this.commands = new Collection();
         this.aliases = new Collection();
 
-        this.loadCommands();
         this.registerEvents();
     }
 
     registerEvents() {
         this.on('ready', () => {
+            this.loadCommands();
+
             console.log('Logged in as ' + this.user.username);
         });
 
-        this.on('messageCreate', message => {
-            if (message.author.bot) return;
-
-            this.executeCommand(message);
+        this.on('interactionCreate', interaction => {
+            if (interaction instanceof Eris.CommandInteraction) {
+                this.executeCommand(interaction);
+            }
         });
 
         this.on('voiceChannelLeave', (member, oldChannel) => {
@@ -89,6 +90,12 @@ class Client extends DiscordClient {
     }
 
     loadCommands() {
+        this.getCommands().then(commands => {
+            commands.every(command => {
+                this.deleteCommand(command.id);
+            })
+        })
+
         this.registerCommand(new Leave(this));
         this.registerCommand(new Play(this));
         this.registerCommand(new NowPlaying(this));
@@ -99,68 +106,71 @@ class Client extends DiscordClient {
     registerCommand(commandClass) {
         if (commandClass instanceof BaseCommand) {
             const name = commandClass.name;
+            const description = commandClass.description;
+            const options = commandClass.options;
 
             if (this.commands.get(name)) {
                 console.error(`Couldn't load ${name}. Reason: Already loaded`);
                 return;
             }
 
-            commandClass.aliases.forEach(alias => {
-                this.aliases.set(alias, commandClass);
-            });
-
             this.commands.set(name, commandClass);
+
+            this.createCommand({
+                name: name,
+                description: description,
+                options: options
+            });
         } else {
             console.error(`Couldn't load ${commandClass}. Reason: Not a command.`);
         }
     }
 
-    executeCommand(message) {
-        const command = this.getBotCommand(message);
-        if (command) {
-            const args = message.content.replace(this.prefix, '').split(' ');
-            args.shift();
+    executeCommand(interaction) {
+        if (interaction instanceof Eris.CommandInteraction) {
+            const commandName = interaction.data.name;
+            const args = interaction.data.options || [];
 
-            command.execute(message, args);
+            const command = this.getBotCommand(commandName);
+
+            if (command instanceof BaseCommand)
+                command.execute(interaction, args);
         }
     }
 
     getGuildVolume(guildId) {
         var volume = 100;
         guild_volumes.forEach(data => {
-            if(data.guild_id == guildId){
+            if (data.guild_id == guildId) {
                 volume = data.volume;
             }
         });
-        
+
         return volume;
     }
 
-    setGuildVolume(guildId, volume){
+    setGuildVolume(guildId, volume) {
         var found = false;
         guild_volumes.forEach(data => {
-            if(data.guild_id == guildId){
+            if (data.guild_id == guildId) {
                 found = true;
                 data.volume = volume;
             }
         });
 
-        if(!found){
-            guild_volumes.push({guild_id: guildId, volume: volume});
+        if (!found) {
+            guild_volumes.push({ guild_id: guildId, volume: volume });
         }
 
         fs.writeFileSync("guild_volumes.json", JSON.stringify(guild_volumes));
     }
 
-    getBotCommand(message) {
-        const args = message.content.split(' ');
-        const commandName = args[0].toLowerCase().replace(this.prefix, '');
-
-        return this.commands.get(commandName) || this.aliases.get(commandName);
+    getBotCommand(commandName) {
+        return this.commands.get(commandName);
     }
 
     embed(description) {
-        return {embed: {color: this.embedColor, description: description}};
+        return { embed: { color: this.embedColor, description: description } };
     }
 }
 

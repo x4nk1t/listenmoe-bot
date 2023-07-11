@@ -1,18 +1,36 @@
 const BaseCommand = require("../BaseCommand.js");
+const { Constants } = require("eris");
 
 class NowPlaying extends BaseCommand {
     constructor(client) {
         super(client, {
-            name: 'now-playing',
-            aliases: ['np']
+            name: "now-playing",
+            description: "Shows what is currently playing",
+            options: [{
+                name: "type",
+                description: "Choose which now playing to show",
+                type: Constants.ApplicationCommandOptionTypes.STRING,
+                required: true,
+                choices: [
+                    {
+                        name: "JPOP",
+                        value: "jpop"
+                    },
+                    {
+                        name: "KPOP",
+                        value: "kpop"
+                    }
+                ]
+            }]
         });
     }
 
-    execute(message, args) {
+    execute(interaction, args) {
         var cp = this.client.wsJPOP.currentPlaying.song;
+        const type = args[0].value || "";
         var pop = '(JPOP)';
 
-        if (args[0] && args[0].toLowerCase() == 'kpop') {
+        if (type && type.toLowerCase() == 'kpop') {
             pop = '(KPOP)';
             cp = this.client.wsKPOP.currentPlaying.song;
         }
@@ -29,12 +47,12 @@ class NowPlaying extends BaseCommand {
                 {name: 'Duration', value: this.formatTime(cp.duration)},
             ],
             footer: {
-                text: 'Requested by ' + message.author.username,
-                icon_url: message.author.avatarURL
+                text: 'Requested by ' + interaction.member.username,
+                icon_url: interaction.member.user.avatarURL
             }
         }
 
-        message.channel.createMessage({embed: embed})
+        interaction.createMessage({embed: embed})
     }
 
     formatTime(duration) {

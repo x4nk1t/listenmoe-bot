@@ -11,5 +11,8 @@
   "author": "x4nk1t",
   "dependencies": {
     "eris": "^0.17.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.1"
   }
 }

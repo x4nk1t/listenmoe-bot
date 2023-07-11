@@ -1,32 +1,37 @@
+const { CommandInteraction } = require("eris");
 const BaseCommand = require("../BaseCommand.js");
 
 class Status extends BaseCommand {
     constructor(client) {
         super(client, {
-            name: 'status',
-            aliases: ['stats']
+            name: "status",
+            description: "Shows the status of the bot"
         });
     }
 
-    async execute(message, args) {
-        const sent = await message.channel.createMessage('Pong!');
-        const ping = Math.round(sent.timestamp - message.timestamp);
+    async execute(interaction, args) {
+        if (interaction instanceof CommandInteraction) {
+            await interaction.acknowledge();
+            const sent = await interaction.createFollowup('Pong!');
+            const ping = Math.round(sent.timestamp - interaction.createdAt);
 
-        const embed = {
-            color: this.client.embedColor,
-            fields: [
-                {name: 'Ping', value: `${ping}ms`, inline: true},
-                {name: 'Uptime', value: this.getUptime(), inline: true},
-                {name: 'Streams', value: this.client.voiceConnections.size.toString(), inline: true},
-                {
-                    name: 'Memory Usage',
-                    value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB/' + (process.memoryUsage().rss / 1024 / 1024).toFixed(2) + 'MB',
-                    inline: true
-                },
-            ]
+            const embed = {
+                color: this.client.embedColor,
+                fields: [
+                    { name: 'Ping', value: `${ping}ms`, inline: true },
+                    { name: 'Uptime', value: this.getUptime(), inline: true },
+                    { name: 'Streams', value: this.client.voiceConnections.size.toString(), inline: true },
+                    {
+                        name: 'Memory Usage',
+                        value: (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2) + 'MB/' + (process.memoryUsage().rss / 1024 / 1024).toFixed(2) + 'MB',
+                        inline: true
+                    },
+                ]
+            }
+
+            interaction.editMessage(sent.id, { content: '\n', embed: embed })
+
         }
-
-        sent.edit({content: '\n', embed: embed})
     }
 
     getUptime() {
