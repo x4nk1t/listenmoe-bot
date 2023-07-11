@@ -2,9 +2,9 @@
   "name": "listenmoe-bot",
   "version": "1.0.0",
   "description": "A discord bot to stream the listen.moe radio.",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
-    "start": "node app.js",
+    "start": "ts-node app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,6 +13,9 @@
     "eris": "^0.17.2"
   },
   "devDependencies": {
-    "@types/node": "^20.4.1"
+    "@types/node": "^20.4.1",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
+    "typescript": "^5.1.6"
   }
 }
