@@ -1,6 +1,5 @@
 {
-    "configVersion": "0.0.1",
-    "prefix": "~",
+    "configVersion": "0.0.2",
     "botToken": "your-bot-token-here",
     "embedColor": "#fe015a",
     "volumeControl": false
