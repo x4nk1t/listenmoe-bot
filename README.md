@@ -33,8 +33,9 @@ npm install
 
 To start the bot run `npm start` or `node app.js`
 
-## Commands
-`Now uses slash commands`
+## Commands (Slash Commands)
+
+_If you want to use prefix commands then see [prefix commands branch](https://github.com/x4nk1t/listenmoe-bot/tree/prefix_commands)_
 
 - `leave` - Bot leaves the voice channel if connected to any.
 - `now-playing [jpop|kpop]` - Shows what is currently playing

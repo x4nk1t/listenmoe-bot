@@ -7,7 +7,7 @@ const ConfigChecker = () => {
 
     if (!config.botToken) return error("Bot token not found!");
 
-    if (config.botToken === "your-bot-token-here") return error("Default Please update the token in config file!");
+    if (config.botToken === "your-bot-token-here") return error("Please add your bot token in config file!");
 
     if (!config.embedColor) return error("Embed color not found!");
 
