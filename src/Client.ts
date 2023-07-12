@@ -163,7 +163,7 @@ class Client extends DiscordClient {
 
     setGuildVolume(guildId: string, volume: number) {
         var found = false;
-        this.guild_volumes.forEach((data: { guild_id: any; volume: any; }) => {
+        this.guild_volumes.forEach((data) => {
             if (data.guild_id == guildId) {
                 found = true;
                 data.volume = volume;
