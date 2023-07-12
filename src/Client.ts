@@ -20,7 +20,7 @@ class Client extends DiscordClient {
     channelMaps: Map<string, TextableChannel>;
     commands: Map<string, BaseCommand>;
     embedColor: number;
-    config: any;
+    config: ListenMoe.ListenMoeConfig;
     wsJPOP: WSConnect;
     wsKPOP: WSConnect;
     guild_volumes: ListenMoe.GuildVolume[];

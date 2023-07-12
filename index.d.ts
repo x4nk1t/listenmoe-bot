@@ -1,6 +1,13 @@
 import Eris, { ApplicationCommandOptions, ApplicationCommandStructure } from "eris";
 
 declare namespace ListenMoe {
+    type ListenMoeConfig = {
+        configVersion: string,
+        botToken: string,
+        embedColor: string,
+        volumeControl: boolean,
+    };
+
     type CommandOptionsStructure = {
         name: string,
         description: string,
@@ -23,7 +30,7 @@ declare namespace ListenMoe {
         guild_id: string,
         volume: number
     };
-    
+
     type SongResponse = {
         song: {
             id: number,
