@@ -1,4 +1,4 @@
-const config = require('../../config.json');
+import config from '../../config.json';
 
 const CONFIG_VERSION = "0.0.2";
 
@@ -15,14 +15,14 @@ const ConfigChecker = () => {
 }
 
 const ConfigError = class extends Error {
-    constructor(message) {
+    constructor(message: string) {
         super(message);
         this.name = 'ConfigError';
     }
 }
 
-const error = (message) => {
+const error = (message: string) => {
     throw new ConfigError(message);
 }
 
-module.exports = ConfigChecker;
+export default ConfigChecker;

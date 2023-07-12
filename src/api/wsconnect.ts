@@ -1,13 +1,21 @@
-const WebSocket = require('ws');
+import Client from "../Client";
+import WebSocket from 'ws';
+
+import { ListenMoe } from "../../index";
 
 class WSConnect {
-    constructor(client, gateaway) {
+    client: Client;
+    gateaway: string;
+    heartbeatInterval: NodeJS.Timer | undefined;
+    currentPlaying: ListenMoe.SongResponse;
+
+    constructor(client: Client, gateaway: string) {
         this.client = client;
         this.gateaway = gateaway;
 
-        this.currentPlaying = [];
+        this.currentPlaying = {} as ListenMoe.SongResponse;
 
-        this.heartbeatInterval = null;
+        this.heartbeatInterval = undefined;
 
         this.events();
     }
@@ -17,27 +25,26 @@ class WSConnect {
     }
 
     run() {
-        const ws = new WebSocket('wss://listen.moe/' + this.gateaway);
+        let ws: WebSocket | undefined = new WebSocket('wss://listen.moe/' + this.gateaway);
 
         ws.onopen = () => {
             clearInterval(this.heartbeatInterval);
-            this.heartbeatInterval = null;
+            this.heartbeatInterval = undefined;
         }
 
         ws.onmessage = message => {
-            if (!message.data.length) return;
+            let response: ListenMoe.ListenMoeResponse;
 
-            let response;
             try {
-                response = JSON.parse(message.data);
+                response = JSON.parse(message.data as string);
             } catch (err) {
                 return;
             }
 
             switch (response.op) {
                 case 0:
-                    ws.send(JSON.stringify({op: 9}));
-                    this.heartbeat(ws, response.d.heartbeat);
+                    ws!.send(JSON.stringify({op: 9}));
+                    this.heartbeat(ws!, response.d.heartbeat);
                     break;
 
                 case 1:
@@ -55,21 +62,21 @@ class WSConnect {
 
         ws.onerror = error => {
             clearInterval(this.heartbeatInterval);
-            this.heartbeatInterval = null;
+            this.heartbeatInterval = undefined;
             if (ws) {
                 ws.close();
-                ws = null;
+                ws = undefined;
             }
 
             setTimeout(() => this.run(), 5000);
         }
     }
 
-    heartbeat(ws, interval) {
+    heartbeat(ws: WebSocket, interval: number) {
         this.heartbeatInterval = setInterval(() => {
             ws.send(JSON.stringify({op: 9}));
         }, interval);
     }
 }
 
-module.exports = WSConnect;
+export default WSConnect;
