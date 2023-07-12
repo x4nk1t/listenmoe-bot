@@ -1,15 +1,17 @@
-const { CommandInteraction } = require("eris");
-const BaseCommand = require("../BaseCommand.js");
+import { CommandInteraction, InteractionContentEdit } from "eris";
+import BaseCommand from "../BaseCommand";
+
+import Client from "../Client.js";
 
 class Status extends BaseCommand {
-    constructor(client) {
+    constructor(client: Client) {
         super(client, {
             name: "status",
             description: "Shows the status of the bot"
         });
     }
 
-    async execute(interaction, args) {
+    async execute(interaction: CommandInteraction, args: undefined) {
         if (interaction instanceof CommandInteraction) {
             await interaction.acknowledge();
             const sent = await interaction.createFollowup('Pong!');
@@ -27,9 +29,9 @@ class Status extends BaseCommand {
                         inline: true
                     },
                 ]
-            }
+            };
 
-            interaction.editMessage(sent.id, { content: '\n', embed: embed })
+            interaction.editMessage(sent.id, { content: '\n', embed: embed } as InteractionContentEdit);
 
         }
     }
@@ -52,4 +54,4 @@ class Status extends BaseCommand {
     }
 }
 
-module.exports = Status;
+export default Status;

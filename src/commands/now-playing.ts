@@ -1,8 +1,10 @@
-const BaseCommand = require("../BaseCommand.js");
-const { Constants } = require("eris");
+import Eris, { CommandInteraction, InteractionContent, Constants } from "eris";
+
+import Client from "../Client";
+import BaseCommand from "../BaseCommand";
 
 class NowPlaying extends BaseCommand {
-    constructor(client) {
+    constructor(client: Client) {
         super(client, {
             name: "now-playing",
             description: "Shows what is currently playing",
@@ -25,9 +27,10 @@ class NowPlaying extends BaseCommand {
         });
     }
 
-    execute(interaction, args) {
+    execute(interaction: CommandInteraction, args: Eris.InteractionDataOptionsString[]) {
         var cp = this.client.wsJPOP.currentPlaying.song;
         const type = args[0].value || "";
+
         var pop = '(JPOP)';
 
         if (type && type.toLowerCase() == 'kpop') {
@@ -39,23 +42,23 @@ class NowPlaying extends BaseCommand {
             title: `Now playing ${pop}`,
             color: this.client.embedColor,
             fields: [
-                {name: 'Name', value: cp.title},
+                { name: 'Name', value: cp.title },
                 {
                     name: (cp.artists.length > 1 ? 'Artists' : 'Artist'),
                     value: cp.artists.map(artist => artist.nameRomaji ? artist.nameRomaji : artist.name).join(', ')
                 },
-                {name: 'Duration', value: this.formatTime(cp.duration)},
+                { name: 'Duration', value: this.formatTime(cp.duration) },
             ],
             footer: {
-                text: 'Requested by ' + interaction.member.username,
-                icon_url: interaction.member.user.avatarURL
+                text: 'Requested by ' + interaction.member!.username,
+                icon_url: interaction.member!.user.avatarURL
             }
-        }
+        };
 
-        interaction.createMessage({embed: embed})
+        interaction.createMessage({ embed: embed } as InteractionContent);
     }
 
-    formatTime(duration) {
+    formatTime(duration: number) {
         var minutes = ("0" + Math.floor(duration / 60)).slice(-2);
         var seconds = ("0" + Math.floor(duration % 60)).slice(-2);
 
@@ -63,4 +66,4 @@ class NowPlaying extends BaseCommand {
     }
 }
 
-module.exports = NowPlaying;
+export default NowPlaying;

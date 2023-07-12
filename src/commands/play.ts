@@ -1,9 +1,12 @@
-const { VoiceChannel } = require("eris");
-const BaseCommand = require("../BaseCommand.js");
-const { Constants } = require("eris");
+import Eris, { CommandInteraction, VoiceChannel, Constants } from "eris";
+
+import Client from "../Client";
+import BaseCommand from "../BaseCommand";
 
 class Play extends BaseCommand {
-    constructor(client) {
+    inlineVolume: { inlineVolume: boolean; } | {};
+    
+    constructor(client: Client) {
         super(client, {
             name: "play",
             description: "Plays listen.moe radio on voice channel",
@@ -28,15 +31,15 @@ class Play extends BaseCommand {
         this.inlineVolume = this.client.config.volumeControl ? { inlineVolume: true } : {};
     }
 
-    execute(interaction, args) {
-        const guild = interaction.member.guild;
+    execute(interaction: CommandInteraction, args: Eris.InteractionDataOptionsString[]) {
+        const guild = interaction.member!.guild;
         const type = args[0].value || "";
 
-        if (interaction.member.voiceState.channelID) {
-            const channelId = interaction.member.voiceState.channelID;
+        if (interaction.member!.voiceState.channelID) {
+            const channelId = interaction.member!.voiceState.channelID;
             const botMember = guild.members.get(this.client.user.id);
 
-            if (botMember.voiceState.channelID) {
+            if (botMember!.voiceState.channelID) {
                 interaction.createMessage(this.embed('Radio already playing. Use `~leave` and try again.'));
                 return;
             }
@@ -68,4 +71,4 @@ class Play extends BaseCommand {
     }
 }
 
-module.exports = Play;
+export default Play;

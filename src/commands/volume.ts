@@ -1,32 +1,33 @@
-const BaseCommand = require("../BaseCommand.js");
-const { Constants } = require("eris");
+import Eris, { CommandInteraction, Constants } from "eris";
+
+import Client from "../Client";
+import BaseCommand from "../BaseCommand";
 
 class Volume extends BaseCommand {
-    constructor(client) {
+    constructor(client: Client) {
         super(client, {
             name: "volume",
             description: "Change the volume of the music",
-            aliases: ["vol", "v"],
             options: [
                 {
                     name: "volume",
-                    description: "Change the volume of the radio",
                     type: Constants.ApplicationCommandOptionTypes.INTEGER,
+                    description: "Set the volume",
+                    required: true,
                     min_value: 1,
-                    max_value: 100,
-                    required: true
+                    max_value: 100
                 }
             ]
         });
     }
 
-    execute(interaction, args) {
+    execute(interaction: CommandInteraction, args: Eris.InteractionDataOptionsNumber[]) {
         if (!this.client.config.volumeControl) {
             interaction.createMessage(this.embed('Volume control is disabled.\nIf you want to enable it, change `volumeControl` to `true` in config file.'));
             return;
         }
 
-        const guild = interaction.member.guild;
+        const guild = interaction.member!.guild;
         const volume = args[0].value;
 
         if (this.isConnected(interaction)) {
@@ -44,4 +45,4 @@ class Volume extends BaseCommand {
     }
 }
 
-module.exports = Volume;
+export default Volume;

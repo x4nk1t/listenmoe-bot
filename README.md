@@ -29,9 +29,10 @@ npm install
 }
 ```
 
-**5. Start the bot**
+**5. Build and Start the bot**
+First, you have to build the bot
 
-To start the bot run `npm start` or `node app.js`
+Run `npm run build` and `npm start` to start the bot
 
 ## Commands (Slash Commands)
 
